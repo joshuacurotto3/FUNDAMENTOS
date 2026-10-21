@@ -1,0 +1,68 @@
+# Proyecto: LimaSalud Responde-PE
+
+# Arreglos paralelos para almacenar los expedientes de emergencia
+codigos = []
+pacientes = []
+recursos = []
+prioridades = []
+
+def registrar_emergencia():
+    print("\n--- REGISTRO DE EMERGENCIA ---")
+    cod = input("Ingrese codigo de emergencia (ej. EXP-01): ").strip().upper()
+    pac = input("Ingrese nombre del paciente: ").strip()
+    rec = input("Ingrese recurso requerido (Ej. Ambulancia): ").strip()
+    pri = input("Ingrese prioridad (Alta/Media/Baja): ").strip().capitalize()
+    
+    # Validacion basica de cadenas vacias
+    if cod == "" or pac == "" or rec == "":
+        print("Error: Hay campos obligatorios vacios. No se registro.")
+        return
+    
+    # Almacenar en los arreglos paralelos
+    codigos.append(cod)
+    pacientes.append(pac)
+    recursos.append(rec)
+    prioridades.append(pri)
+    print("¡Expediente registrado correctamente!")
+
+def buscar_emergencia():
+    print("\n--- BUSCAR EXPEDIENTE ---")
+    if len(codigos) == 0:
+        print("No hay expedientes registrados aun.")
+        return
+        
+    buscado = input("Ingrese el codigo de emergencia a buscar: ").strip().upper()
+    
+    if buscado in codigos:
+        indice = codigos.index(buscado)
+        print("\n[RESULTADO ENCONTRADO]")
+        print(f"Codigo   : {codigos[indice]}")
+        print(f"Paciente : {pacientes[indice]}")
+        print(f"Recurso  : {recursos[indice]}")
+        print(f"Prioridad: {prioridades[indice]}")
+    else:
+        print("El codigo ingresado no se encuentra en el sistema.")
+
+def menu_principal():
+    while True:
+        print("\n==============================")
+        print("   LIMALUD RESPONDE-PE (EP)   ")
+        print("==============================")
+        print("1. Registrar expediente")
+        print("2. Buscar expediente por codigo")
+        print("3. Salir del sistema")
+        
+        opcion = input("Seleccione una opcion (1-3): ").strip()
+        
+        if opcion == "1":
+            registrar_emergencia()
+        elif opcion == "2":
+            buscar_emergencia()
+        elif opcion == "3":
+            print("Saliendo del sistema de emergencia. ¡Hasta luego!")
+            break
+        else:
+            print("Opcio invalida. Por favor ingrese un numero del 1 al 3.")
+
+if __name__ == "__main__":
+    menu_principal()
