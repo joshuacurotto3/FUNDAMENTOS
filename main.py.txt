@@ -1,6 +1,4 @@
-# Proyecto: LimaSalud Responde-PE
-
-# Arreglos paralelos para almacenar los expedientes de emergencia
+# Proyecto: LimaSalud Responde-PE 
 codigos = []
 pacientes = []
 recursos = []
@@ -9,16 +7,19 @@ prioridades = []
 def registrar_emergencia():
     print("\n--- REGISTRO DE EMERGENCIA ---")
     cod = input("Ingrese codigo de emergencia (ej. EXP-01): ").strip().upper()
+    
+    if cod in codigos:
+        print("Error: El código de emergencia ya está registrado.")
+        return
+        
     pac = input("Ingrese nombre del paciente: ").strip()
     rec = input("Ingrese recurso requerido (Ej. Ambulancia): ").strip()
     pri = input("Ingrese prioridad (Alta/Media/Baja): ").strip().capitalize()
     
-    # Validacion basica de cadenas vacias
-    if cod == "" or pac == "" or rec == "":
+    if not cod or not pac or not rec:
         print("Error: Hay campos obligatorios vacios. No se registro.")
         return
     
-    # Almacenar en los arreglos paralelos
     codigos.append(cod)
     pacientes.append(pac)
     recursos.append(rec)
@@ -27,42 +28,82 @@ def registrar_emergencia():
 
 def buscar_emergencia():
     print("\n--- BUSCAR EXPEDIENTE ---")
-    if len(codigos) == 0:
+    if not codigos:
         print("No hay expedientes registrados aun.")
         return
         
     buscado = input("Ingrese el codigo de emergencia a buscar: ").strip().upper()
     
     if buscado in codigos:
-        indice = codigos.index(buscado)
+        i = codigos.index(buscado)
         print("\n[RESULTADO ENCONTRADO]")
-        print(f"Codigo   : {codigos[indice]}")
-        print(f"Paciente : {pacientes[indice]}")
-        print(f"Recurso  : {recursos[indice]}")
-        print(f"Prioridad: {prioridades[indice]}")
+        print(f"Codigo   : {codigos[i]}")
+        print(f"Paciente : {pacientes[i]}")
+        print(f"Recurso  : {recursos[i]}")
+        print(f"Prioridad: {prioridades[i]}")
     else:
         print("El codigo ingresado no se encuentra en el sistema.")
+
+def exportar_y_descargar_excel():
+    print("\n--- EXPORTAR Y DESCARGAR EXCEL ---")
+    if not codigos:
+        print("No hay expedientes para exportar.")
+        return False
+
+    try:
+        from openpyxl import Workbook
+        from google.colab import files
+        
+        nombre_archivo = "expedientes_emergencia.xlsx"
+        libro = Workbook()
+        hoja = libro.active
+        hoja.title = "Emergencias"
+
+        # Cabecera de la tabla en Excel
+        hoja.append(["Codigo", "Paciente", "Recurso", "Prioridad"])
+
+        # Carga rápida de los arreglos paralelos
+        for i in range(len(codigos)):
+            hoja.append([codigos[i], pacientes[i], recursos[i], prioridades[i]])
+
+        libro.save(nombre_archivo)
+        print("¡Archivo Excel generado se descargo!")
+        
+        # Dispara la descarga instantánea y finaliza la celda
+        files.download(nombre_archivo)
+        return True
+
+    except Exception as error:
+        print("No se pudo crear o descargar el archivo Excel:", error)
+        return False
 
 def menu_principal():
     while True:
         print("\n==============================")
-        print("   LIMALUD RESPONDE-PE (EP)   ")
+        print("    LIMASALUD RESPONDE-PE     ")
         print("==============================")
         print("1. Registrar expediente")
         print("2. Buscar expediente por codigo")
-        print("3. Salir del sistema")
+        print("3. Salir sin exportar")
+        print("4. Exportar y descargar registros en EXCEL")
         
-        opcion = input("Seleccione una opcion (1-3): ").strip()
+        opcion = input("Seleccione una opcion (1-4): ").strip()
         
         if opcion == "1":
             registrar_emergencia()
         elif opcion == "2":
             buscar_emergencia()
         elif opcion == "3":
-            print("Saliendo del sistema de emergencia. ¡Hasta luego!")
+            print("Saliendo del sistema sin exportar. ¡Hasta luego!")
             break
+        elif opcion == "4":
+            exito = exportar_y_descargar_excel()
+            if exito:
+                print("¡Sistema finalizado con éxito!")
+                break # Cierra el programa para que la descarga inicie al instante
         else:
-            print("Opcio invalida. Por favor ingrese un numero del 1 al 3.")
+            print("Opcion invalida. Por favor ingrese un numero del 1 al 4.")
 
 if __name__ == "__main__":
     menu_principal()
+#listo
