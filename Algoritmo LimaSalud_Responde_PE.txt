@@ -1,0 +1,64 @@
+Algoritmo LimaSalud_Responde_PE
+	Dimensionar codigos(100)
+	Dimensionar pacientes(100)
+	Dimensionar recursos(100)
+	Dimensionar prioridades(100)
+	Definir totalRegistros Como Entero
+	totalRegistros <- 0
+	Definir opcion Como Entero
+	Repetir
+		Escribir '=================================='
+		Escribir '   LIMALUD RESPONDE-PE (PARCIAL)   '
+		Escribir '=================================='
+		Escribir '1. Registrar expediente de emergencia'
+		Escribir '2. Buscar expediente por código'
+		Escribir '3. Salir'
+		Escribir 'Seleccione una opción (1-3): '
+		Leer opcion
+		Según opcion Hacer
+			1:
+				Escribir '--- REGISTRO DE EMERGENCIA ---'
+				// Se usa (totalRegistros + 1) para que el índice comience en 1
+				Escribir 'Ingrese código de emergencia (ej. EXP-01): '
+				Leer codigos[totalRegistros+1]
+				Escribir 'Ingrese nombre del paciente: '
+				Leer pacientes[totalRegistros+1]
+				Escribir 'Ingrese recurso requerido (Ej. Ambulancia): '
+				Leer recursos[totalRegistros+1]
+				Escribir 'Ingrese prioridad (Alta/Media/Baja): '
+				Leer prioridades[totalRegistros+1]
+				totalRegistros <- totalRegistros+1
+				Escribir '¡Expediente registrado correctamente!'
+			2:
+				Escribir '--- BUSCAR EXPEDIENTE ---'
+				Si totalRegistros=0 Entonces
+					Escribir 'No hay expedientes registrados en el sistema.'
+				SiNo
+					Definir codigoBuscado Como Cadena
+					Escribir 'Ingrese el código a buscar: '
+					Leer codigoBuscado
+					Definir encontrado Como Lógico
+					encontrado <- Falso
+					Definir i Como Entero
+					// Se recorre desde 1 hasta totalRegistros
+					Para i<-1 Hasta totalRegistros Hacer
+						Si codigos[i]=codigoBuscado Entonces
+							Escribir '[RESULTADO ENCONTRADO]'
+							Escribir 'Código   : ', codigos[i]
+							Escribir 'Paciente : ', pacientes[i]
+							Escribir 'Recurso  : ', recursos[i]
+							Escribir 'Prioridad: ', prioridades[i]
+							encontrado <- Verdadero
+						FinSi
+					FinPara
+					Si  NO encontrado Entonces
+						Escribir 'El código ingresado no existe en el sistema.'
+					FinSi
+				FinSi
+			3:
+				Escribir 'Saliendo del sistema de coordinación sanitaria...'
+			De Otro Modo:
+				Escribir 'Opción inválida. Ingrese un número entre 1 y 3.'
+		FinSegún
+	Hasta Que opcion=3
+FinAlgoritmo
